@@ -1,0 +1,21 @@
+Middle ware is a function that has control of the req and res of any API.
+So when the front end send Json Object so we need to backend to understand this is a json.
+so install npm install body-parser
+add 
+
+ app.use(bodyParser.json());
+
+ morgan 
+
+
+ install mongoose 
+ normall we will add mongodb before the starting the server
+ 
+
+ //Before Pusing object in Database we need create a model with mongoose.
+ Model is same as Collections.we can say a mongodb is called collection and in Nodejs its called Model.so we need to create a model of 
+ product.
+
+
+
+// To make require in Database
