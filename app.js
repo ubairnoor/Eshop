@@ -26,6 +26,8 @@ app.use(`${api}/categories`, categoriesRouter)
 
 //Database 
 mongoose.connect(process.env.CONNECTION_STRING,{
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
     dbName:'eshop-database'
 })
 .then(()=>{
