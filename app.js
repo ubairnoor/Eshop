@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser')
 const morgan = require('morgan');
 const mongoose = require('mongoose')
+const cors = require('cors');
 
 const Product = require('./models/products')
 
@@ -11,6 +12,8 @@ require('dotenv/config');
 //middleware 
 app.use(bodyParser.json());
 app.use(morgan('tiny'))
+app.use(cors());
+app.options('*',cors())
 
 
 const api = process.env.API_URL;
