@@ -4,9 +4,8 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan');
 const mongoose = require('mongoose')
 const cors = require('cors');
-
-const Product = require('./models/products')
-
+const Product = require('./models/products');
+const Category = require('./models/category');
 require('dotenv/config');
 
 //middleware 
@@ -19,8 +18,10 @@ app.options('*',cors())
 const api = process.env.API_URL;
 //Routes
 const productRouter = require('./routers/products')
+const categoriesRouter = require('./routers/categories')
 //Middle Ware
 app.use(`${api}/products`,productRouter)
+app.use(`${api}/categories`, categoriesRouter)
 
 
 //Database 
