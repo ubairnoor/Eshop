@@ -2,13 +2,25 @@ const express = require('express');
 const Category = require('../models/category');
 const router = express.Router();
 const Product = require('../models/products')
-router.get(` /`, async (req, res) => {
-    const productList = await Product.find();
+router.get(`/`, async (req, res) => {
+    //to include what data you need add in select() and if we want to execulde use  -  sign to execlude.
+
+    const productList = await Product.find().select('name image -_id');
     if (!productList) {
         res.status(500).json({ success: false })
     }
     res.send(productList);
 
+})
+//get a product by id 
+router.get(`/:id`,async(req , res)=>{
+    const product = await Product.findById(req.params.id);
+    console.log(product)
+    if(!product)
+    {
+        res.status(500).json({success:false})
+    }
+    res.status(200).send(product)
 })
 router.post(`/`, async (req, res) => {
     const category = await Category.findById(req.body.category);
