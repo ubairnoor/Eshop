@@ -25,6 +25,27 @@ router.get('/:id',async(req,res)=>{
     //if there is category with this id then send category.
     res.status(200).send(category);
 })
+//Update Category
+router.put('/:id',async(req,res)=>{
+    const category =  await Category.findByIdAndUpdate(
+        //the first parameter is the id which i got from user.
+        req.params.id, 
+        //the second paramter is object data.
+        {
+            name:req.body.name,
+            icon:req.body.icon,
+            color:req.body.color, 
+        },
+        // without this object we get old data to get new data we use { new:true } object.
+        // when we use this we get updated data.
+        { new:true }
+
+    )
+    if(!category)
+    return res.status(400).send('the category cannot be created!');
+    res.send(category)
+})
+
 //Adding Catogory 
 router.post('/', async (req,res)=>{
     let category = new Category({
