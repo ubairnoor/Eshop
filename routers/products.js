@@ -110,9 +110,12 @@ router.get('/get/count', async (req,res) =>{
 })
 // Get Featured Product Api statistics Request
 
-router.get('/get/feature', async (req,res)=>{
-
-    const featureProduct = await Product.find({isFeatured:true})
+router.get('/get/feature/:count', async (req,res)=>{
+//now if the user send count of feature product
+const count = req.params.count ? req.params.count:0
+//if there is count passed it with Api or then get it 
+//after we get Feature Product we say Limit(count)
+    const featureProduct = await Product.find({isFeatured:true}).limit(count)
     if(!featureProduct){
         res.status(500).json({success:false})
 
