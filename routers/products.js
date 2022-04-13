@@ -6,11 +6,13 @@ const mongoose = require('mongoose')
 router.get(`/`, async (req, res) => {
     //to include what data you need add in select() and if we want to execulde use  -  sign to execlude.
     //localhost:3000/api/v1/products?categories = 2342342
-    let filterArray  = []
+    let filterArray  = {};
     if(req.query.categories){
-         filterArray = req.query.categories.split(',')
+         filterArray = {category:req.query.categories.split(',')}
+         
+         console.log('>>>>>',filterArray)
     }
-    const productList = await Product.find({category:filterArray}).populate('category');
+    const productList = await Product.find(filterArray).populate('category');
     if (!productList) {
         res.status(500).json({ success: false })
     }
