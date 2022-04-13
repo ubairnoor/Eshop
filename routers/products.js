@@ -95,6 +95,19 @@ router.delete(`/:id`,(req,res)=>{
     })
 
 })
+//Show how many Product in Database to admin Panel.
+router.get('/get/count', async (req,res) =>{
+    console.log("Inside the Route")
+   const productCount = await Product.countDocuments();
+    console.log(">>>>>>>>>>>>>>>",productCount)
+    if(!productCount){
+        res.status(500).json({success:false})
+    }
+    res.send({
+        count:productCount
+    })
+    
+})
 
 module.exports = router;
 
