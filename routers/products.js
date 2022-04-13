@@ -2,6 +2,7 @@ const express = require('express');
 const Category = require('../models/category');
 const router = express.Router();
 const Product = require('../models/products')
+const mongoose = require('mongoose')
 router.get(`/`, async (req, res) => {
     //to include what data you need add in select() and if we want to execulde use  -  sign to execlude.
 
@@ -24,9 +25,12 @@ router.get(`/:id`,async(req , res)=>{
 })
 
 // update a  product
-router.put(`/:id`,async(req,res)=>{
+router.put('/:id',async (req,res)=>{
+    //when we give wrong id to update we didnt get nothing so what we do we will check id in mongodb is tit valid or not
+    if(!mongoose.isValidObjectId(req.params.id)) {
+        res.status(400).send('Invalid Object Id')
+    } 
     const category = await Category.findById(req.body.category);
-
     console.log(category)
     if(!category) return res.status(400).send('Invalid Category')
     const product = await Product.findByIdAndUpdate(
