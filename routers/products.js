@@ -5,8 +5,12 @@ const Product = require('../models/products')
 const mongoose = require('mongoose')
 router.get(`/`, async (req, res) => {
     //to include what data you need add in select() and if we want to execulde use  -  sign to execlude.
-
-    const productList = await Product.find().populate('category');
+    //localhost:3000/api/v1/products?categories = 2342342
+    let filterArray  = []
+    if(req.query.categories){
+         filterArray = req.query.categories.split(',')
+    }
+    const productList = await Product.find({category:filterArray}).populate('category');
     if (!productList) {
         res.status(500).json({ success: false })
     }
@@ -18,7 +22,7 @@ router.get(`/:id`,async(req , res)=>{
     const product = await Product.findById(req.params.id).populate('category');
     console.log(product)
     if(!product)
-    {
+    { 
         res.status(500).json({success:false})
     }
     res.status(200).send(product)
@@ -126,6 +130,7 @@ const count = req.params.count ? req.params.count:0
 
 
 })
+//Filter By Categories
 
 module.exports = router;
 
