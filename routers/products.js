@@ -108,6 +108,21 @@ router.get('/get/count', async (req,res) =>{
     })
     
 })
+// Get Featured Product Api statistics Request
+
+router.get('/get/feature', async (req,res)=>{
+
+    const featureProduct = await Product.find({isFeatured:true})
+    if(!featureProduct){
+        res.status(500).json({success:false})
+
+    }
+    res.send({
+        featureProduct:featureProduct
+    })
+
+
+})
 
 module.exports = router;
 
