@@ -3,11 +3,20 @@ const User = require('../models/user');
 const router = express.Router();
 const bcrypt = require("bcryptjs")
 router.get('/',async(req,res)=>{
-    const userList =  await User.find();
-    if(!userList){
+    const userList =  await User.find().select('-passwordHash');
+    if(!userList){ 
         res.status(500).json({success:false})
     }
     res.send(userList)
+})
+//Get a single User
+
+router.get('/:id',async(req,res)=>{
+    const user=await User.findById(req.params.id).select('name email phone ');
+    if(!user){
+        res.status(500).json({message:'The user with the Given Id is not Found'})
+    }
+    res.status(200).send(user)
 })
 router.post('/', async (req, res) => { 
     let user = new User({
