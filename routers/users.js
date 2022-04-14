@@ -1,12 +1,14 @@
 const express = require('express');
 const User = require('../models/user');
 const router = express.Router();
-
+const bcrypt = require("bcryptjs")
 router.post('/', async (req, res) => { 
     let user = new User({
         name: req.body.name,
         email: req.body.email,
-        passwordHash:req.body.passwordHash,
+        //we will ask a user normal Password we will not ask hashpassowrd for user.
+        // internally cypt this password.
+        passwordHash:bcrypt.hashSync(req.body.password,10),
         phone: req.body.phone,
         isAdmin: req.body.isAdmin,
         street: req.body.street,
