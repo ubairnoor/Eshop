@@ -38,6 +38,19 @@ router.post('/', async (req, res) => {
     return res.status(400).send('the user cannot be ceated')
     res.send(user)
 })
+//Login 
 
+router.post('/login',async(req,res)=>{
+    console.log("Inside the Login Route")
+    //login by email
+    const user = await User.findOne({email:req.body.email})
+
+    
+
+    if(!user){
+        return res.status(400).send('The user not Found')
+    }
+    return res.status(200).send(user)
+})
 module.exports = router;
 
