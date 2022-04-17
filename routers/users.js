@@ -1,7 +1,8 @@
 const express = require('express');
 const User = require('../models/user');
 const router = express.Router();
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcryptjs");
+const jwt =  require('jsonwebtoken');
 router.get('/', async (req, res) => {
     const userList = await User.find()
     if (!userList) {
@@ -43,15 +44,25 @@ router.post('/', async (req, res) => {
 router.post('/login', async (req, res) => {
     console.log("Inside the Login Route")
     //login by email
+    const secret =process.env.secret
     const user = await User.findOne({ email: req.body.email })
+
     console.log('>>>', user)
     if (!user) {
         return res.status(400).send('The user not Found')
     }
     console.log('Password is >>>',req.body.password)
     if (user && bcrypt.compareSync(req.body.password, user.passwordHash)) {
+        //To Genrate Json Web Token we can do
+        //when the user is Authenticated  
+        const token = jwt.sign({
+            userId:user.id
+        },secret,{
+            expiresIn:'1d'
+        }
+        )
         console.log('user>>>>>>>>>>>>>>>>>>>>>' ,bcrypt.compareSync(req.body.password, user.passwordHash))
-        res.status(200).send('User Authenticated')
+        res.status(200).send({user:user.email,token:token})
     }
     else {
         res.status(400).send('Password is wrong')
