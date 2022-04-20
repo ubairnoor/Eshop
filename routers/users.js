@@ -56,7 +56,8 @@ router.post('/login', async (req, res) => {
         //To Genrate Json Web Token we can do
         //when the user is Authenticated  
         const token = jwt.sign({
-            userId:user.id
+            userId:user.id,
+            
         },secret,{
             expiresIn:'1d'
         }
