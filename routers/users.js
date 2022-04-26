@@ -19,7 +19,8 @@ router.get('/:id', async (req, res) => {
     }
     res.status(200).send(user)
 })
-router.post('/', async (req, res) => {
+
+router.post('/register', async (req, res) => {
     let user = new User({
         name: req.body.name,
         email: req.body.email,
@@ -57,7 +58,11 @@ router.post('/login', async (req, res) => {
         //when the user is Authenticated  
         const token = jwt.sign({
             userId:user.id,
+            //we can pass secret information with the token.
+            //isadmin we pass here
             
+            isAdmin:user.isAdmin
+
         },secret,{
             expiresIn:'1d'
         }
@@ -71,6 +76,18 @@ router.post('/login', async (req, res) => {
 
 
     // return res.status(200).send(user)
+})
+
+router.get(`/get/count/`,async(req,res)=>{
+    console.log("inside the Get Count")
+    const userCount = await User.countDocuments();
+    console.log(userCount)
+    if(!userCount){
+        res.status(500).json({success:false})
+    }
+    res.send({
+        userCount: userCount
+    })
 })
 module.exports = router;
 

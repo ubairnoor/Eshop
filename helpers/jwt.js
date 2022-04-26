@@ -10,7 +10,9 @@ function authJwt(){
     const api =process.env.API_URL;
     return expressJwt({
         secret,
-        algorithms:['HS256']
+        algorithms:['HS256'],
+        //if the user sis admin or not 
+        isRevoked:isRevoked
 }).unless({
     //This method is used to exclude the Api where we dont need token such as 
     //login Api.for that we have to add the path of that API.
@@ -25,6 +27,18 @@ function authJwt(){
 }) 
 
     
+}
+
+async function isRevoked(req,payload,done){
+    //what is request.req is what is something to user.
+    // the payload contains the data which are inside the token.
+    // if the in the payload if there is no admin then reject the token
+    //
+    if(!payload.isAdmin){
+        done(null,true)
+    }
+    // else if he is admin we can say done without any parameters.
+    done();
 }
 
 module.exports = authJwt; 
