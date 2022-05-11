@@ -22,11 +22,13 @@ const api = process.env.API_URL;
 const productRouter = require('./routers/products')
 const categoriesRouter = require('./routers/categories');
 const usersRoutes = require('./routers/users');
+const orderRoute = require('./routers/orders');
 const res = require('express/lib/response');
 //Middle Ware
 app.use(`${api}/products`,productRouter)
 app.use(`${api}/categories`, categoriesRouter)
 app.use(`${api}/users`,usersRoutes)
+app.use(`${api}/orders`,orderRoute)
 
 
 //Database 

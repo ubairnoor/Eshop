@@ -9,11 +9,11 @@ const orderSchema = mongoose.Schema({
         ref:'OrderItem',
         required:true
     }],
-    shippingAdress1:{
+    shippingAddress1:{
         type:String,
         required:true
     },
-    shippingAdress2:{
+    shippingAddress2:{
         type:String,
         required:true
     },
@@ -30,16 +30,16 @@ const orderSchema = mongoose.Schema({
         required:true
     },
     phone:{
-        type:number,
+        type:String,
         required:true
     },
-    satus:{
+    status:{
         type:String,
         required:true,
         status:'Pending', 
     },
     totalPrice:{
-        type:number,
+        type:Number,
         required:true
     },
     user:{
