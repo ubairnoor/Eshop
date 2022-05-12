@@ -5,7 +5,7 @@ const  {OrderItem}  = require('../models/order-item')
 router.get(`/`,async(req,res)=>{
     console.log("Orders page")
 
-    const orderList =  await Order.find().populate('user','name' ).sort('dateOrdered');
+    const orderList =  await Order.find().populate('user','name' ).sort({'dateOrdered':-1});// To get Order in Newest to oldest we have to add -1 
     // sORT fUNCTION SORT THE ORDERS IN OLDEST TO NEWEST DATE
     console.log("/////////>>>>",orderList)
     if(!orderList){
