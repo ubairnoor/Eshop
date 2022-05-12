@@ -74,5 +74,17 @@ router.put('/:id',async (req,res)=>{
     return res.status(400).send('The Order is not Found');
     res.send(order)
 })
+
+router.delete('/:id', (req,res)=>{
+    Order.findByIdAndDelete(req.params.id).then(order=>{
+        if(order){
+            return res.status(200).json({success:true, message:'the Order is deleted'})
+        }else{
+            return res.status(404).json({success:false, message:"Order is not Found"})
+        }
+    }).catch(err=>{
+        return res.status(500).json({success: false, error: err})
+    })
+})
 module.exports = router;
 
