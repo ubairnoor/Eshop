@@ -43,8 +43,9 @@ const orderSchema = mongoose.Schema({
         required:true
     },
     user:{
-        type:String,
-        required:true
+        // to get user information in order we have to add refrence model of user.
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
     },
     dateOrdered:{
         type:Date,

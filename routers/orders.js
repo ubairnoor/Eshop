@@ -4,7 +4,10 @@ const router =  express.Router();
 const  {OrderItem}  = require('../models/order-item')
 router.get(`/`,async(req,res)=>{
     console.log("Orders page")
-    const orderList =  await Order.find();
+
+    const orderList =  await Order.find().populate('user','name' ).sort('dateOrdered');
+    // sORT fUNCTION SORT THE ORDERS IN OLDEST TO NEWEST DATE
+    console.log("/////////>>>>",orderList)
     if(!orderList){
         res.status(500).json({
             success:false
