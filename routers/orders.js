@@ -57,5 +57,22 @@ console.log('>>>------------------------>>>>>>>>',orderItemsIdsResolved);
     return res.status(400).send('the order cannot be created');
     res.send(order)
 })
+
+// Update the 
+ //the admin want to update the status of the order
+ //the order is tranfered from pending to ship to deliver state
+ //we need to just to update the status
+
+router.put('/:id',async (req,res)=>{
+    const order = await Order.findByIdAndUpdate(
+        req.params.id,{
+            status: req.body.status
+        },
+        {new: true}
+    )
+    if(!order)
+    return res.status(400).send('The Order is not Found');
+    res.send(order)
+})
 module.exports = router;
 
