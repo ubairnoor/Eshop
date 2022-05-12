@@ -16,6 +16,16 @@ router.get(`/`,async(req,res)=>{
     res.send(orderList);
 })
 
+router.get(`/:id`, async(req,res)=>{
+    const order =  await Order.findById(req.params.id).populate('user','name').sort({'dateOrdered': -1});
+    if(!order){
+        res.status(500).json({
+            success:false
+        })
+    }
+    res.send(order);
+})
+
 router.post('/',async (req,res)=>{
 const orderItemsIds = Promise.all (req.body.orderItems.map( async orderItem => {
     let newOrderItem =  new OrderItem({
