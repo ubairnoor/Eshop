@@ -88,7 +88,6 @@ router.post(`/`, async (req, res) => {
 
 })
 //Deleting a product
-
 router.delete(`/:id`,(req,res)=>{
     Product.findByIdAndRemove(req.params.id).then(product => {
         if(product){
