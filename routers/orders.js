@@ -37,6 +37,15 @@ const orderItemsIds = Promise.all (req.body.orderItems.map( async orderItem => {
     return newOrderItem._id
 }))
 const orderItemsIdsResolved = await orderItemsIds
+const totalPrices = await Promise.all(orderItemsIdsResolved.map(async (orderItemId)=>{
+    const orderItem = await OrderItem.findById(orderItemId).populate('product', 'price');
+    console.log("----order item ", orderItem)
+    const totalPrice = orderItem.product.price * orderItem.quantity;
+    return totalPrice
+}))
+
+const totalPrice = totalPrices.reduce((a,b) => a +b , 0);
+console.log("Total Price is:",totalPrice)
 console.log('>>>------------------------>>>>>>>>',orderItemsIdsResolved);
 
     let order =  new Order({

@@ -35,12 +35,12 @@ const orderSchema = mongoose.Schema({
     },
     status:{
         type:String,
-        required:true,
+        
         status:'Pending', 
     },
     totalPrice:{
         type:Number,
-        required:true
+       
     },
     user:{
         // to get user information in order we have to add refrence model of user.
