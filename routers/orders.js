@@ -98,5 +98,19 @@ router.delete('/:id', (req,res)=>{
         return res.status(500).json({success: false, error: err})
     })
 })
+
+//total sales
+router.get('/get/totalsales', async(req,res)=>{
+    const totalSales =  await Order.aggregate([
+//we use methoid aggregate and we can 
+// 
+{$group : {_id:null,  totalsales : { $sum: '$totalPrice' }}}
+    ])
+    console.log(totalSales)
+    if(!totalSales){
+        return res.status(400).send('The Order sales cannot be genrated')
+    }
+    res.send({totalsales: totalSales.pop().totalsales})
+})
 module.exports = router;
 
