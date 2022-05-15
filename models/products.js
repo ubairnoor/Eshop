@@ -14,7 +14,11 @@ const productSchema  = mongoose.Schema({
         default:''
     },
     //Image is Array of String and type is also String
-    image:[{
+    image:{
+        type: String
+
+    },
+    images:[{
         type: String
 
     }],

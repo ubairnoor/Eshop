@@ -3,6 +3,32 @@ const Category = require('../models/category');
 const router = express.Router();
 const Product = require('../models/products')
 const mongoose = require('mongoose')
+const multer = require('multer')
+//LIST OF FILE TO UPLOAD IN BACKEND
+const FILE_TYPE_MAP ={
+    'image/png':'png',
+    'image/jpeg':'jpeg',
+    'image/jpg':'jpg'
+}
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const isValid = FILE_TYPE_MAP[file.mimetype];
+        let uploadError = new Error('Invalid Image Type');
+        if(isValid){
+            uploadError = null
+        }
+      cb(null, 'public/uploads')
+    },
+    filename: function (req, file, cb) {
+        const fileName = file.originalname.split(' ').join('-');
+        const extension = FILE_TYPE_MAP[file.mimetype];
+
+        cb(null, `${fileName}-${Date.now()}.${extension}`)
+    }
+  })
+  
+  const uploadOptions = multer({ storage: storage })
+
 router.get(`/`, async (req, res) => {
     //to include what data you need add in select() and if we want to execulde use  -  sign to execlude.
     //localhost:3000/api/v1/products?categories = 2342342
@@ -61,12 +87,18 @@ router.put('/:id',async (req,res)=>{
     return res.status(500).send("The Product cannot be Updated");
     res.status(200).send(product)
 })
-router.post(`/`, async (req, res) => {
+router.post(`/`, uploadOptions.single('image'),async (req, res) => {
     const category = await Category.findById(req.body.category);
-    if (!category) return res.status(400).send("Invalid Category")
+    if (!category) return res.status(400).send("Invalid Category");
+    // checking file
+  const file = req.file;
+  if(!file) return res.status(400).send('No image in the Request')
+    const fileName = req.file.filename
+    //we need a full url for that we need
+    const basePath = `${req.protocol}://${req.get('host')}/public/upload/`;
     let product = new Product({
         name: req.body.name,
-        image: req.body.image,
+        image: fileName, //"https://localhost:3000/image-232323.jpeg",
         countInStock: req.body.countInStock,
         description: req.body.description,
         richDescription: req.body.richDescription,
@@ -88,7 +120,6 @@ router.post(`/`, async (req, res) => {
 
 })
 //Deleting a product
-
 router.delete(`/:id`,(req,res)=>{
     Product.findByIdAndRemove(req.params.id).then(product => {
         if(product){
@@ -132,7 +163,34 @@ const count = req.params.count ? req.params.count:0
 
 
 })
-//Filter By Categories
 
+// Upload Multiple Images 
+router.put('/gallery-images/:id',uploadOptions.array('images',3), async(req,res)=>{
+    if(!mongoose.isValidObjectId(req.params.id)) {
+        res.status(400).send('Invalid Object Id')
+    }
+    const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
+   
+   const files =  req.files
+   const imagesPaths = [];
+   if(files){
+       files.map(file=>{
+           imagesPaths.push(`${basePath}${file.filename}`);
+       })
+   }
+   
+   
+    const product =  await Product.findByIdAndUpdate(
+        req.params.id,{
+            images:imagesPaths
+        },{
+            new: true
+        }
+    )
+    if(!product)
+        return res.status(500).send('the product cannot be updated')
+    res.send(product);
+})
+  
 module.exports = router;
 

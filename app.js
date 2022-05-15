@@ -29,7 +29,8 @@ app.use(`${api}/products`,productRouter)
 app.use(`${api}/categories`, categoriesRouter)
 app.use(`${api}/users`,usersRoutes)
 app.use(`${api}/orders`,orderRoute)
-
+app.use('/public/uploads',express.static(__dirname + '/public/uploads'));
+app.use(errorHandler);
 
 //Database 
 mongoose.connect(process.env.CONNECTION_STRING,{
