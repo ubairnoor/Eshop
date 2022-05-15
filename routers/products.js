@@ -163,15 +163,13 @@ const count = req.params.count ? req.params.count:0
 
 
 })
-//Filter By Categories
 
 // Upload Multiple Images 
-
 router.put('/gallery-images/:id',uploadOptions.array('images',3), async(req,res)=>{
     if(!mongoose.isValidObjectId(req.params.id)) {
         res.status(400).send('Invalid Object Id')
     }
-    const basePath = `${req.protocol}://${req.get('host')}/public/upload/`;
+    const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
    
    const files =  req.files
    const imagesPaths = [];
