@@ -3,6 +3,19 @@ const Category = require('../models/category');
 const router = express.Router();
 const Product = require('../models/products')
 const mongoose = require('mongoose')
+const multer = require('multer')
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public/uploads')
+    },
+    filename: function (req, file, cb) {
+      const fileName = file.originalname.split(' ').join('-');
+        cb(null, `${fileName}-${Date.now()}` + '-' + Date.now())
+    }
+  })
+  
+  const uploadOptions = multer({ storage: storage })
+
 router.get(`/`, async (req, res) => {
     //to include what data you need add in select() and if we want to execulde use  -  sign to execlude.
     //localhost:3000/api/v1/products?categories = 2342342
@@ -61,12 +74,15 @@ router.put('/:id',async (req,res)=>{
     return res.status(500).send("The Product cannot be Updated");
     res.status(200).send(product)
 })
-router.post(`/`, async (req, res) => {
+router.post(`/`, uploadOptions.single('image'),async (req, res) => {
     const category = await Category.findById(req.body.category);
     if (!category) return res.status(400).send("Invalid Category")
+    const fileName = req.file.filename
+    //we need a full url for that we need
+    const basePath = `${req.protocol}://${req.get('host')}/public/upload/`;
     let product = new Product({
         name: req.body.name,
-        image: req.body.image,
+        image: fileName, //"https://localhost:3000/image-232323.jpeg",
         countInStock: req.body.countInStock,
         description: req.body.description,
         richDescription: req.body.richDescription,
@@ -132,6 +148,6 @@ const count = req.params.count ? req.params.count:0
 
 })
 //Filter By Categories
-
+  
 module.exports = router;
 
