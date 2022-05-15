@@ -4,13 +4,26 @@ const router = express.Router();
 const Product = require('../models/products')
 const mongoose = require('mongoose')
 const multer = require('multer')
+//LIST OF FILE TO UPLOAD IN BACKEND
+const FILE_TYPE_MAP ={
+    'image/png':'png',
+    'image/jpeg':'jpeg',
+    'image/jpg':'jpg'
+}
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
+        const isValid = FILE_TYPE_MAP[file.mimetype];
+        let uploadError = new Error('Invalid Image Type');
+        if(isValid){
+            uploadError = null
+        }
       cb(null, 'public/uploads')
     },
     filename: function (req, file, cb) {
-      const fileName = file.originalname.split(' ').join('-');
-        cb(null, `${fileName}-${Date.now()}` + '-' + Date.now())
+        const fileName = file.originalname.split(' ').join('-');
+        const extension = FILE_TYPE_MAP[file.mimetype];
+
+        cb(null, `${fileName}-${Date.now()}.${extension}`)
     }
   })
   
